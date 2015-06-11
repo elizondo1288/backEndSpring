@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="responseSuccess" class="com.backend.contacts.entities.ResponseDTO">
+		<property name="status" value="200"/>
+		<property name="message" value="Accion realizada con exito"/>
+	</bean>
+	
+	<bean id="responseFailure" class="com.backend.contacts.entities.ResponseDTO">
+		<property name="status" value="500"/>
+		<property name="message" value="Error"/>
+	</bean>
+
+</beans>

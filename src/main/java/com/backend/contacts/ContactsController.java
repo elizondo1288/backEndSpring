@@ -76,9 +76,6 @@ public class ContactsController {
 		
 		context.close();
 		
-		
-
-		
 		return response;
 	}
 	

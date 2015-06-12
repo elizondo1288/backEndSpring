@@ -1,6 +1,7 @@
 package com.backend.contacts.dataLayer;
 
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -44,5 +45,25 @@ public class MongoDBController {
 			
 			return false;
 		}
+	}
+	
+	public List<ContactDTO> getAllContacts(){
+		
+		MongoOperations mongoOps;
+		try {
+			
+			mongoOps = new MongoTemplate(new MongoClient(), "test");
+			
+			List<ContactDTO> listOfContacts =  mongoOps.findAll(ContactDTO.class);
+			System.out.println("Results: " + listOfContacts);
+			
+			return listOfContacts;
+
+		} catch (UnknownHostException e) {
+			
+			e.printStackTrace();
+			
+			return null;
+		}		
 	}
 }

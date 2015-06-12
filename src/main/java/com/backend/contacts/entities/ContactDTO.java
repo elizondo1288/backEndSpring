@@ -1,9 +1,14 @@
 package com.backend.contacts.entities;
 
+import org.springframework.data.annotation.Id;
+
 public class ContactDTO {
+		
 	private String name;
 	private String address;
 	private String phone;
+	
+	@Id
 	private String email;
 	
 	public String getName() {
@@ -30,6 +35,7 @@ public class ContactDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	
 	
 	

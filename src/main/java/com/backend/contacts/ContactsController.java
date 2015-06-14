@@ -1,12 +1,8 @@
 package com.backend.contacts;
 
-import java.net.UnknownHostException;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.contacts.entities.*;
-import com.mongodb.MongoClient;
 import com.backend.contacts.dataLayer.MongoDBController;
 
 @RestController
@@ -37,27 +32,27 @@ public class ContactsController {
 	
 	@RequestMapping(value = "/addContact", method = RequestMethod.POST, consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
 	public @ResponseBody ResponseDTO restAddContact(@RequestBody ContactDTO obj) {
-				
-		Boolean success = MongoDBController.getInstance().insertContact(obj); 
-		ResponseDTO response = returnResponse(success);
+
+		//Boolean success = MongoDBController.getInstance().insertContact(obj); 
+		ResponseDTO response = returnResponse(true);
 		
 				
 		return response;
 	}
 	
 	@RequestMapping(value = "/updateContact", method = RequestMethod.PUT, consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
-	public @ResponseBody ResponseDTO restUpdateContact(@RequestBody ContactDTO obj) {
-				
-		ResponseDTO response = returnResponse(true);
+	public @ResponseBody ResponseDTO restUpdateContact(@RequestBody UpdateDTO obj) {
 		
+		ResponseDTO response = returnResponse(true);
+		response.setMessage("New: " + obj.getEmail() + " and old:"+ obj.getOldEmail());
 		return response;
 	}
 	
 	@RequestMapping(value = "/deleteContact", method = RequestMethod.DELETE, consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
-	public @ResponseBody ResponseDTO restDeleteContact(@RequestBody ContactDTO obj) {
+	public @ResponseBody ResponseDTO restDeleteContact(@RequestBody String email) {
 				
 		ResponseDTO response = returnResponse(true);
-		
+		response.setMessage(response.getMessage() + " Deleting: " + email);
 		return response;
 	}
 	

@@ -1,5 +1,6 @@
 package com.backend.contacts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -33,9 +34,7 @@ public class ContactsController {
 	@RequestMapping(value = "/addContact", method = RequestMethod.POST, consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
 	public @ResponseBody ResponseDTO restAddContact(@RequestBody ContactDTO obj) {
 
-		//Boolean success = MongoDBController.getInstance().insertContact(obj); 
-		ResponseDTO response = returnResponse(true);
-		
+		ResponseDTO response = MongoDBController.getInstance().insertContact(obj);		
 				
 		return response;
 	}
@@ -43,28 +42,35 @@ public class ContactsController {
 	@RequestMapping(value = "/updateContact", method = RequestMethod.PUT, consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
 	public @ResponseBody ResponseDTO restUpdateContact(@RequestBody UpdateDTO obj) {
 		
-		ResponseDTO response = returnResponse(true);
-		response.setMessage("New: " + obj.getEmail() + " and old:"+ obj.getOldEmail());
+		System.out.println("New: " + obj.getEmail() + " and old:"+ obj.getOldEmail());
+		
+		ResponseDTO response = MongoDBController.getInstance().updateContact(obj);
+		
 		return response;
 	}
 	
 	@RequestMapping(value = "/deleteContact", method = RequestMethod.DELETE, consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
-	public @ResponseBody ResponseDTO restDeleteContact(@RequestBody String email) {
-				
-		ResponseDTO response = returnResponse(true);
-		response.setMessage(response.getMessage() + " Deleting: " + email);
+	public @ResponseBody ResponseDTO restDeleteContact(@RequestBody DeleteDTO obj) {
+			
+		System.out.println("Email to delete: " + obj.getEmail());
+		
+		
+		ResponseDTO response = MongoDBController.getInstance().deleteContact(obj.getEmail());
+		response.setMessage(response.getMessage() + " Deleting: " + obj.getEmail());
 		return response;
 	}
 	
 	@RequestMapping(value = "/getContacts", method = RequestMethod.GET)
-	public @ResponseBody ResponseDTO restGetContact(@RequestBody ContactDTO obj) {
-				
-		/*List<ObjPerson> list1 = mongoOps.findAll(ObjPerson.class);
-			System.out.println("Results: " + list1);
-			*/
-		ResponseDTO response = returnResponse(true);
+	public List<ContactDTO> restGetContact() {
 		
-		return response;
+		List<ContactDTO> list = MongoDBController.getInstance().getAllContacts();
+		
+		/*for(ContactDTO contact : list){
+			
+			System.out.println(contact.getName() + " -- " + contact.getEmail());
+		}*/
+		
+		return list;
 	}
 	
 	

@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import com.backend.contacts.entities.*;
 import com.mongodb.MongoClient;
@@ -62,18 +63,32 @@ public class MongoDBController {
 			
 			Query query = new Query();
 			query.addCriteria(Criteria.where("email").is(contact.getEmail()));
-			ContactDTO contactFinded = mongoOps.findOne(query, ContactDTO.class);
 			
-			contactFinded.setName(contact.getName());
-			contactFinded.setAddress(contact.getAddress());
-			contactFinded.setEmail(contact.getEmail());
-			contactFinded.setPhone(contact.getPhone());
+			ContactDTO contactFinded = mongoOps.findOne(query, ContactDTO.class);
+			System.out.println("userTest3 - " + contactFinded);
+			
+			Update update = new Update();
+			update.set("name", contact.getName());
+			update.set("address", contact.getAddress());
+			update.set("email", contact.getEmail());
+			update.set("phone", contact.getPhone());
+			
+			mongoOps.updateFirst(query, update, ContactDTO.class);
+			
 			
 			System.out.println("Apunto de Update");
 			
-			mongoOps.save(contactFinded);
+			
 			
 			System.out.println("Termino el update");
+			
+			
+			//returns everything
+			Query query1 = new Query();
+			query1.addCriteria(Criteria.where("email").is(contact.getEmail()));
+	 
+			ContactDTO contactFinded2 = mongoOps.findOne(query, ContactDTO.class);
+			System.out.println("userTest3 - " + contactFinded2);
 			
 			return returnObjResponse(true);
 
@@ -86,7 +101,7 @@ public class MongoDBController {
 	}
 	
 	//DELETE = Deletes a contact from the database
-	public ResponseDTO deleteContact(ContactDTO contact){
+	public ResponseDTO deleteContact(String email){
 		
 		MongoOperations mongoOps;
 		try {
@@ -94,8 +109,10 @@ public class MongoDBController {
 			mongoOps = new MongoTemplate(new MongoClient(), "test");
 			
 			Query query = new Query();
-			query.addCriteria(Criteria.where("email").is(contact.getEmail()));
+			query.addCriteria(Criteria.where("email").is(email));
 			ContactDTO contactFinded = mongoOps.findOne(query, ContactDTO.class);
+			System.out.println("userTest3 - " + contactFinded.getId());
+			
 			
 			if(contactFinded != null){
 				System.out.println("Apunto de Delete");
@@ -105,6 +122,7 @@ public class MongoDBController {
 				return returnObjResponse(true);
 				
 			}else{
+				
 				ResponseDTO response = returnObjResponse(false);
 				response.setMessage("The Contact Does Not Exists");
 				

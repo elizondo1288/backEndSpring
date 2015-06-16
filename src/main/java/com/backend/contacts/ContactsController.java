@@ -1,9 +1,7 @@
 package com.backend.contacts;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +22,8 @@ public class ContactsController {
 		ContactDTO contact = new ContactDTO();
 		contact.setName(name);
 				
-		ResponseDTO response = returnResponse(true);
-		response.setMessage(response.getMessage() + " " + contact.getName());
+		ResponseDTO response = new ResponseDTO();
+		response.setMessage("Testing Method");
 		
 		return response;
     }
@@ -34,6 +32,7 @@ public class ContactsController {
 	@RequestMapping(value = "/addContact", method = RequestMethod.POST, consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
 	public @ResponseBody ResponseDTO restAddContact(@RequestBody ContactDTO obj) {
 
+		System.out.print("LLEGO A INSERT");
 		ResponseDTO response = MongoDBController.getInstance().insertContact(obj);		
 				
 		return response;
@@ -43,9 +42,7 @@ public class ContactsController {
 	public @ResponseBody ResponseDTO restUpdateContact(@RequestBody UpdateDTO obj) {
 		
 		System.out.println("New: " + obj.getEmail() + " and old:"+ obj.getOldEmail());
-		
 		ResponseDTO response = MongoDBController.getInstance().updateContact(obj);
-		
 		return response;
 	}
 	
@@ -53,10 +50,7 @@ public class ContactsController {
 	public @ResponseBody ResponseDTO restDeleteContact(@RequestBody DeleteDTO obj) {
 			
 		System.out.println("Email to delete: " + obj.getEmail());
-		
-		
 		ResponseDTO response = MongoDBController.getInstance().deleteContact(obj.getEmail());
-		response.setMessage(response.getMessage() + " Deleting: " + obj.getEmail());
 		return response;
 	}
 	
@@ -64,33 +58,8 @@ public class ContactsController {
 	public List<ContactDTO> restGetContact() {
 		
 		List<ContactDTO> list = MongoDBController.getInstance().getAllContacts();
-		
-		/*for(ContactDTO contact : list){
-			
-			System.out.println(contact.getName() + " -- " + contact.getEmail());
-		}*/
-		
 		return list;
 	}
 	
-	
-	private ResponseDTO returnResponse(Boolean success){
-		
-		ClassPathXmlApplicationContext context= new ClassPathXmlApplicationContext("beans.xml");
-		ResponseDTO response;
-		
-		if(success){
-			response = (ResponseDTO)context.getBean("responseSuccess");
-		}else{
-			response = (ResponseDTO)context.getBean("responseFailure");
-		}
-		
-		context.close();
-		
-		
-
-		
-		return response;
-	}
 	
 }

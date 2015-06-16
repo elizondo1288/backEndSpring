@@ -26,9 +26,7 @@ public class MongoDBController {
 	    return instance;
 	}
 	
-	protected MongoDBController(){
-		// Exists only to defeat instantiation.
-	}
+	protected MongoDBController(){	}
 	
 	//INSERT = Inserts a contact in the database
 	public ResponseDTO insertContact(ContactDTO contact){
@@ -63,10 +61,7 @@ public class MongoDBController {
 			
 			Query query = new Query();
 			query.addCriteria(Criteria.where("email").is(contact.getEmail()));
-			
-			ContactDTO contactFinded = mongoOps.findOne(query, ContactDTO.class);
-			System.out.println("userTest3 - " + contactFinded);
-			
+						
 			Update update = new Update();
 			update.set("name", contact.getName());
 			update.set("address", contact.getAddress());
@@ -75,21 +70,8 @@ public class MongoDBController {
 			
 			mongoOps.updateFirst(query, update, ContactDTO.class);
 			
-			
-			System.out.println("Apunto de Update");
-			
-			
-			
 			System.out.println("Termino el update");
-			
-			
-			//returns everything
-			Query query1 = new Query();
-			query1.addCriteria(Criteria.where("email").is(contact.getEmail()));
-	 
-			ContactDTO contactFinded2 = mongoOps.findOne(query, ContactDTO.class);
-			System.out.println("userTest3 - " + contactFinded2);
-			
+				
 			return returnObjResponse(true);
 
 		} catch (UnknownHostException e) {
@@ -111,11 +93,8 @@ public class MongoDBController {
 			Query query = new Query();
 			query.addCriteria(Criteria.where("email").is(email));
 			ContactDTO contactFinded = mongoOps.findOne(query, ContactDTO.class);
-			System.out.println("userTest3 - " + contactFinded.getId());
-			
-			
+						
 			if(contactFinded != null){
-				System.out.println("Apunto de Delete");
 				mongoOps.remove(contactFinded);
 				System.out.println("Termino el Delete");
 				
@@ -124,7 +103,6 @@ public class MongoDBController {
 			}else{
 				
 				ResponseDTO response = returnObjResponse(false);
-				response.setMessage("The Contact Does Not Exists");
 				
 				return response;
 			}
